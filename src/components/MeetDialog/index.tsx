@@ -11,25 +11,14 @@ import {
 import { Box } from "@mui/system";
 import React from "react";
 
-interface SimpleDialogData {
+interface MeetDialogData {
   onClose: () => void;
-  selectedAction: string;
   open: boolean;
-  setSelectedAction: (value: string) => void;
   startSmallTalk: () => void;
 }
 
-export const SimpleDialog = (props: SimpleDialogData) => {
-  const { onClose, startSmallTalk, setSelectedAction, open } = props;
-
-  const handleClose = () => {
-    onClose();
-  };
-
-  const handleListItemClick = (value: string) => {
-    setSelectedAction(value);
-    onClose();
-  };
+export const MeetDialog = (props: MeetDialogData) => {
+  const { onClose, startSmallTalk, open } = props;
 
   const handleStartSmallTalk = () => {
     onClose();
@@ -37,13 +26,10 @@ export const SimpleDialog = (props: SimpleDialogData) => {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={onClose} open={open}>
       <DialogTitle>You've met Helena!</DialogTitle>
       <List sx={{ pt: 0 }}>
-        <ListItem
-          button
-          // onClick={() => handleListItemClick(email)}
-        >
+        <ListItem button>
           <ListItemAvatar>
             <Box display="flex" justifyContent="center">
               <EmojiPeopleIcon color="success" width="100%" />
