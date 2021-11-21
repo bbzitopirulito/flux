@@ -30,7 +30,12 @@ export const GameDialog = (props: MeetDialogData) => {
   return (
     <Dialog onClose={onClose} open={open}>
       <DialogTitle>
-        <Box display="flex" justifyContent="center">
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+        >
           <Typography>You are in the game room!</Typography>
           <Typography>Let's ease off a bit.</Typography>
         </Box>
