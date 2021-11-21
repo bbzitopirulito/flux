@@ -1,4 +1,27 @@
-import { Alert as MuiAlert, Dialog, Snackbar, Typography } from "@mui/material";
+import {
+  Alert as MuiAlert,
+  Button,
+  Dialog,
+  DialogTitle,
+  Fab,
+  FilledInput,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Menu,
+  MenuItem,
+  OutlinedInput,
+  Snackbar,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import background from "../assets/background.png";
 import character from "../assets/character.png";
@@ -7,19 +30,40 @@ import controller from "../assets/controller.png";
 import { MeetDialog } from "../components/MeetDialog";
 import { drawScenario, isNearCharacter2, isNearController } from "../utils";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import AddIcon from "@mui/icons-material/Add";
 import { Box } from "@mui/system";
 import { GameDialog } from "../components/GameDialog";
 import Snake from "snake-game-react";
+import { createStyles, makeStyles } from "@mui/styles";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
+
+export const useStyles = makeStyles(() =>
+  createStyles({
+    root: {
+      marginBottom: "200px",
+      bottom: "200px",
+    },
+  })
+);
 
 const Home: React.FC = () => {
   const [isInteractionDialogOpen, setIsInteractionDialogOpen] = useState(false);
   const [isSmallTalkOpen, setIsSmallTalkOpen] = useState<boolean>(false);
   const [isSnakeGameOpen, setIsSnakeGameOpen] = useState<boolean>(false);
   const [isGameDialogOpen, setIsGameDialogOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [isOpenNewEventDialog, setIsOpenNewEventDialog] =
+    useState<boolean>(false);
+  const open = Boolean(anchorEl);
+
+  const classes = useStyles();
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const backgroundId = "background";
   const characterId = "character";
@@ -108,6 +152,10 @@ const Home: React.FC = () => {
     };
   }, []);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   const handleMeetDialogClose = () => {
     setIsInteractionDialogOpen(false);
   };
@@ -159,6 +207,102 @@ const Home: React.FC = () => {
         <div>
           <Snake color1="#248ec2" color2="#1d355e" backgroundColor="#ebebeb" />
         </div>
+      </Dialog>
+      <Box
+        onClick={handleClick}
+        id="demo-positioned-button"
+        aria-controls="demo-positioned-menu"
+        aria-haspopup="true"
+        position="absolute"
+        bottom={30}
+        left={30}
+        style={{ zIndex: 1000 }}
+      >
+        <Fab color="primary" aria-label="add">
+          <AddIcon />
+        </Fab>
+      </Box>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        className={classes.root}
+        style={{ bottom: "200px", marginBottom: 200 }}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={() => setIsOpenNewEventDialog(true)}>
+          Create Event
+        </MenuItem>
+        <MenuItem onClick={handleClose}>New Meeting</MenuItem>
+      </Menu>
+      <Dialog
+        open={isOpenNewEventDialog}
+        onClose={() => setIsOpenNewEventDialog(false)}
+      >
+        <DialogTitle>
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Typography>Create New Event</Typography>
+          </Box>
+        </DialogTitle>
+        <Box p={3}>
+          <div>
+            <TextField
+              label="Event Name"
+              value={"New Event"}
+              id="outlined-start-adornment"
+              sx={{ m: 1, width: "25ch" }}
+            />
+            <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">
+                Date
+              </InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={"text"}
+                // value={"12/12/2021 at 5pm"}
+                value={new Date().toDateString()}
+                // onChange={handleChange("password")}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      // onClick={handleClickShowPassword}
+                      // onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {/* {values.showPassword ? <VisibilityOff /> : <Visibility />} */}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl>
+          </div>
+          <Box mt={2} display="flex" justifyContent="center">
+            <Button
+              variant="contained"
+              // 494d7e
+              style={{ backgroundColor: "#494d7e" }}
+              // color="success"
+            >
+              Create
+            </Button>
+          </Box>
+        </Box>
       </Dialog>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
